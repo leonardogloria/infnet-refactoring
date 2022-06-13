@@ -25,42 +25,40 @@ public class Cliente {
         this.locacoes = locacoes;
     }
     public String conta(){
-        double quantiaTotal = 0;
-        int pontosLocadorFrequente = 0;
-        List<Locacao> locacoes2 = this.locacoes;
         String resultado = "Registro de locacoes de " + getNome() +  "\n";
-        for(Locacao l : locacoes2 ) {
-            double estaQ = 0;
-            switch (l.getFilme().getCodigoPreco()){
-                case Filme.NORMAL :
-                    estaQ += 2;
-                    if(l.getDiasAlugados() > 2 ){
-                        estaQ += (l.getDiasAlugados() - 2) * 1.5;
-                    }
-                    break;
-                case Filme.LANCAMENTO:
-                    estaQ += l.getDiasAlugados() * 3;
-                    break;
-                case Filme.INFANTIL:
-                    estaQ += 1.5;
-                    if(l.getDiasAlugados() > 3) {
-                        estaQ += (l.getDiasAlugados() - 3) * 1.5;
-                    }
-                    break;
-            }
-            //Adicionar pontos do locador frequente
-            pontosLocadorFrequente++;
-            //adicionar bonus para uma locacao e lancamento por dias dias.
-            if(l.getFilme().getCodigoPreco() == Filme.LANCAMENTO && l.getDiasAlugados() > 1 ){
-                pontosLocadorFrequente++;
-            }
-            //mostrar o resultado desta locacao
-            resultado += "\t" + l.getFilme().getTitulo() + "\t" + String.valueOf(estaQ) + "\n" ;
-            quantiaTotal += estaQ;
+        for(Locacao l : locacoes) {
+            resultado += "\t" + l.getFilme().getTitulo() + "\t" + String.valueOf(l.getPreco()) + "\n" ;
         }
         //adicionar rodape
-        resultado += "O valor devido é: " + String.valueOf(quantiaTotal) + "\n";
-        resultado += "Você ganhou " + String.valueOf(pontosLocadorFrequente) + " pontos de locador frequente";
+        resultado += "O valor devido é: " + String.valueOf(getPrecoTotal()) + "\n";
+        resultado += "Você ganhou " + String.valueOf(getTotalPontosLocadorFrequente()) + " pontos de locador frequente";
         return resultado;
     }
+
+    private int getPontosLocadorFrequente(Locacao locacao) {
+        if(locacao.getFilme().getCodigoPreco() == Filme.LANCAMENTO && locacao.getDiasAlugados() > 1 ){
+            return 2;
+        }else return 1;
+
+    }
+
+    private double quantiaDe(Locacao locacao) {
+        return locacao.getPreco();
+    }
+    private Double getPrecoTotal(){
+        double quantiaTotal = 0;
+        for(Locacao l : locacoes ) {
+            quantiaTotal += l.getPreco();
+        }
+        return quantiaTotal;
+    }
+    public int getTotalPontosLocadorFrequente(){
+        int quantidadeTotal = 0;
+        for(Locacao l : locacoes ) {
+            quantidadeTotal += l.getPontosLocadorFrequente();
+        }
+        return quantidadeTotal;
+
+    }
+
 }
